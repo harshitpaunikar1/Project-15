@@ -20,3 +20,7 @@
 
 - Task summary: Weekend fix — the visualizations had overlapping labels in narrow viewports. Adjusted the figure size and padding.
 - Deliverable: Good enough to not be embarrassing.
+## 2022-04-18 - Day 4: EDA
+
+- Task summary: By this point I had the rough direction, so the work became more practical. I spent most of the day trying to chart the strongest relationships and note which inputs appear predictive and make the whole thing feel less half baked. The middle part always takes longer than it should, mostly becuase one fix usually reveals two more things to clean up. Part of the effort went into making sure a normal person could use the page without needing extra explanation.
+- Deliverable: I wrapped up the day with eDA notes and charts mostly in place. It was not perfect, but it was good enough to keep the project moving. It was not super polished, just stable enough that I felt okay moving forward.
