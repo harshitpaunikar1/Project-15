@@ -20,3 +20,7 @@
 
 - Task summary: By this point I had the rough direction, so the work became more practical. I spent most of the day trying to chart the strongest relationships and note which inputs appear predictive and make the whole thing feel less half baked. The middle part always takes longer than it should, mostly becuase one fix usually reveals two more things to clean up. Part of the effort went into making sure a normal person could use the page without needing extra explanation.
 - Deliverable: I wrapped up the day with eDA notes and charts mostly in place. It was not perfect, but it was good enough to keep the project moving. It was not super polished, just stable enough that I felt okay moving forward.
+## 2022-04-19 - Day 5: Feature prep
+
+- Task summary: By this point I had the rough direction, so the work became more practical. I spent most of the day trying to choose the final features, encodings, and train/test split strategy and make the whole thing feel less half baked. By now I had enough structure to keep going without staring at the screen too long, which honestly helped a lot. The code was not huge, but getting the flow to feel simple took more fiddling than expected.
+- Deliverable: I wrapped up the day with feature set mostly in place. It was not perfect, but it was good enough to keep the project moving. I also left myself a few rough reminders for the next day so I would not have to rediscover the same context again.
