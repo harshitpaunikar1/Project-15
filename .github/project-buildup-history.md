@@ -40,3 +40,7 @@
 
 - Task summary: Got stuck mid-afternoon and had to regroup — ran the whole thing end to end again after a fresh look. Caught a stale import that broke the flow.
 - Deliverable: Should've caught it earlier but better now than later.
+## 2022-04-21 - Day 7: Model improvement
+
+- Task summary: Ended up revisiting this in the evening — resolved a merge conflict that came up when I switched branches to check something else.
+- Deliverable: Pushed before end of day.
