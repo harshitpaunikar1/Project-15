@@ -44,3 +44,7 @@
 
 - Task summary: Ended up revisiting this in the evening — resolved a merge conflict that came up when I switched branches to check something else.
 - Deliverable: Pushed before end of day.
+## 2022-04-22 - Day 8: Model export
+
+- Task summary: This was the middle stretch where the project started feeling real. I kept going and tried to save the trained model and any preprocessing objects so the web app can reuse them, then cleaned up whatever looked confusing or weak from the earlier days. By now I had enough structure to keep going without staring at the screen too long, which honestly helped a lot. The code was not huge, but getting the flow to feel simple took more fiddling than expected.
+- Deliverable: Ended the day with serialized model files in hand, plus a few side notes on what still needed fixing later. I also left myself a few rough reminders for the next day so I would not have to rediscover the same context again.
