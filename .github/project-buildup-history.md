@@ -60,3 +60,7 @@
 
 - Task summary: Late-night fix: added one more evaluation metric that felt missing from the earlier comparison.
 - Deliverable: Good enough to not be embarrassing.
+## 2022-04-25 - Day 9: Flask scaffold
+
+- Task summary: Late-night fix: pushed a tiny fix after a teammate's comment — nothing major, just a wording issue in the output.
+- Deliverable: Should've caught it earlier but better now than later.
