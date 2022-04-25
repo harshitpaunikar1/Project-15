@@ -56,3 +56,7 @@
 
 - Task summary: Noticed something off from this morning — added a sanity check assertion that would catch obvious data shape issues early.
 - Deliverable: Minor but worth doing.
+## 2022-04-25 - Day 9: Flask scaffold
+
+- Task summary: Late-night fix: added one more evaluation metric that felt missing from the earlier comparison.
+- Deliverable: Good enough to not be embarrassing.
