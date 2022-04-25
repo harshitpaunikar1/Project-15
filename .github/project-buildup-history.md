@@ -52,3 +52,7 @@
 
 - Task summary: This was the middle stretch where the project started feeling real. I kept going and tried to set up the Flask app structure, routes, templates, and form submission flow, then cleaned up whatever looked confusing or weak from the earlier days. Once the base made some sense, I could finally move a bit faster and stop second guessing every tiny decision. I had to think about both the model side and the form side at the same time, which made the day a bit scattered.
 - Deliverable: Ended the day with running Flask app in hand, plus a few side notes on what still needed fixing later. There were still a couple of loose parts, but nothing serious enough to block the next step.
+## 2022-04-25 - Day 9: Flask scaffold
+
+- Task summary: Noticed something off from this morning — added a sanity check assertion that would catch obvious data shape issues early.
+- Deliverable: Minor but worth doing.
