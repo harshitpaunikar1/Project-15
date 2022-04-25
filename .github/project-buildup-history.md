@@ -36,3 +36,7 @@
 
 - Task summary: This was the middle stretch where the project started feeling real. I kept going and tried to save the trained model and any preprocessing objects so the web app can reuse them, then cleaned up whatever looked confusing or weak from the earlier days. By now I had enough structure to keep going without staring at the screen too long, which honestly helped a lot. The code was not huge, but getting the flow to feel simple took more fiddling than expected.
 - Deliverable: Ended the day with serialized model files in hand, plus a few side notes on what still needed fixing later. I also left myself a few rough reminders for the next day so I would not have to rediscover the same context again.
+## 2022-04-25 - Day 9: Flask scaffold
+
+- Task summary: This was the middle stretch where the project started feeling real. I kept going and tried to set up the Flask app structure, routes, templates, and form submission flow, then cleaned up whatever looked confusing or weak from the earlier days. Once the base made some sense, I could finally move a bit faster and stop second guessing every tiny decision. I had to think about both the model side and the form side at the same time, which made the day a bit scattered.
+- Deliverable: Ended the day with running Flask app in hand, plus a few side notes on what still needed fixing later. There were still a couple of loose parts, but nothing serious enough to block the next step.
