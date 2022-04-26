@@ -40,3 +40,7 @@
 
 - Task summary: This was the middle stretch where the project started feeling real. I kept going and tried to set up the Flask app structure, routes, templates, and form submission flow, then cleaned up whatever looked confusing or weak from the earlier days. Once the base made some sense, I could finally move a bit faster and stop second guessing every tiny decision. I had to think about both the model side and the form side at the same time, which made the day a bit scattered.
 - Deliverable: Ended the day with running Flask app in hand, plus a few side notes on what still needed fixing later. There were still a couple of loose parts, but nothing serious enough to block the next step.
+## 2022-04-26 - Day 10: Prediction wiring
+
+- Task summary: This was the middle stretch where the project started feeling real. I kept going and tried to connect form inputs to the model and show prediction results on the page, then cleaned up whatever looked confusing or weak from the earlier days. The middle part always takes longer than it should, mostly becuase one fix usually reveals two more things to clean up. Part of the effort went into making sure a normal person could use the page without needing extra explanation.
+- Deliverable: Ended the day with end-to-end prediction flow in hand, plus a few side notes on what still needed fixing later. It was not super polished, just stable enough that I felt okay moving forward.
