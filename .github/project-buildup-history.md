@@ -68,3 +68,7 @@
 
 - Task summary: This was the middle stretch where the project started feeling real. I kept going and tried to connect form inputs to the model and show prediction results on the page, then cleaned up whatever looked confusing or weak from the earlier days. The middle part always takes longer than it should, mostly becuase one fix usually reveals two more things to clean up. Part of the effort went into making sure a normal person could use the page without needing extra explanation.
 - Deliverable: Ended the day with end-to-end prediction flow in hand, plus a few side notes on what still needed fixing later. It was not super polished, just stable enough that I felt okay moving forward.
+## 2022-04-27 - Day 11: Validation
+
+- Task summary: This was the middle stretch where the project started feeling real. I kept going and tried to add input validation and user-friendly error messages for bad or missing values, then cleaned up whatever looked confusing or weak from the earlier days. By now I had enough structure to keep going without staring at the screen too long, which honestly helped a lot. The code was not huge, but getting the flow to feel simple took more fiddling than expected.
+- Deliverable: Ended the day with safer form handling in hand, plus a few side notes on what still needed fixing later. I also left myself a few rough reminders for the next day so I would not have to rediscover the same context again.
