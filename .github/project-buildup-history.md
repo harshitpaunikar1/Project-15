@@ -48,3 +48,7 @@
 
 - Task summary: This was the middle stretch where the project started feeling real. I kept going and tried to add input validation and user-friendly error messages for bad or missing values, then cleaned up whatever looked confusing or weak from the earlier days. By now I had enough structure to keep going without staring at the screen too long, which honestly helped a lot. The code was not huge, but getting the flow to feel simple took more fiddling than expected.
 - Deliverable: Ended the day with safer form handling in hand, plus a few side notes on what still needed fixing later. I also left myself a few rough reminders for the next day so I would not have to rediscover the same context again.
+## 2022-04-28 - Day 12: UI styling
+
+- Task summary: Closer to the end, I was mostly tightening things up instead of inventing new scope. The job for the day was to make the app readable and clean enough for a normal user to understand quickly so the final result looked a bit more complete. Once the base made some sense, I could finally move a bit faster and stop second guessing every tiny decision. I had to think about both the model side and the form side at the same time, which made the day a bit scattered.
+- Deliverable: Ended the day with styled interface in hand, plus a few side notes on what still needed fixing later. There were still a couple of loose parts, but nothing serious enough to block the next step.
