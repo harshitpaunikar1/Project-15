@@ -76,3 +76,7 @@
 
 - Task summary: Ended up revisiting this in the evening — re-ran the plots with better axis labels and a more readable color palette.
 - Deliverable: Solid now, moving on.
+## 2022-04-28 - Day 12: UI styling
+
+- Task summary: Closer to the end, I was mostly tightening things up instead of inventing new scope. The job for the day was to make the app readable and clean enough for a normal user to understand quickly so the final result looked a bit more complete. Once the base made some sense, I could finally move a bit faster and stop second guessing every tiny decision. I had to think about both the model side and the form side at the same time, which made the day a bit scattered.
+- Deliverable: Ended the day with styled interface in hand, plus a few side notes on what still needed fixing later. There were still a couple of loose parts, but nothing serious enough to block the next step.
