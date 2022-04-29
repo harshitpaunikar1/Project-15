@@ -80,3 +80,7 @@
 
 - Task summary: Closer to the end, I was mostly tightening things up instead of inventing new scope. The job for the day was to make the app readable and clean enough for a normal user to understand quickly so the final result looked a bit more complete. Once the base made some sense, I could finally move a bit faster and stop second guessing every tiny decision. I had to think about both the model side and the form side at the same time, which made the day a bit scattered.
 - Deliverable: Ended the day with styled interface in hand, plus a few side notes on what still needed fixing later. There were still a couple of loose parts, but nothing serious enough to block the next step.
+## 2022-04-29 - Day 13: Local testing
+
+- Task summary: Closer to the end, I was mostly tightening things up instead of inventing new scope. The job for the day was to run a small manual test matrix with realistic inputs and edge cases so the final result looked a bit more complete. The middle part always takes longer than it should, mostly becuase one fix usually reveals two more things to clean up. Part of the effort went into making sure a normal person could use the page without needing extra explanation.
+- Deliverable: Ended the day with test notes in hand, plus a few side notes on what still needed fixing later. It was not super polished, just stable enough that I felt okay moving forward.
