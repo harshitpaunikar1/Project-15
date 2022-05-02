@@ -56,3 +56,7 @@
 
 - Task summary: Closer to the end, I was mostly tightening things up instead of inventing new scope. The job for the day was to run a small manual test matrix with realistic inputs and edge cases so the final result looked a bit more complete. The middle part always takes longer than it should, mostly becuase one fix usually reveals two more things to clean up. Part of the effort went into making sure a normal person could use the page without needing extra explanation.
 - Deliverable: Ended the day with test notes in hand, plus a few side notes on what still needed fixing later. It was not super polished, just stable enough that I felt okay moving forward.
+## 2022-05-02 - Day 14: Deployment prep
+
+- Task summary: Closer to the end, I was mostly tightening things up instead of inventing new scope. The job for the day was to add requirements, environment notes, and instructions to run or deploy the app so the final result looked a bit more complete. Toward the end I mostly kept trimming weird bits, fixing wording, and tying the loose parts together. The code was not huge, but getting the flow to feel simple took more fiddling than expected.
+- Deliverable: Ended the day with deployment checklist in hand, plus a few side notes on what still needed fixing later. I also left myself a few rough reminders for the next day so I would not have to rediscover the same context again.
