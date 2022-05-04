@@ -64,3 +64,7 @@
 
 - Task summary: Closer to the end, I was mostly tightening things up instead of inventing new scope. The job for the day was to write the README with problem, model, usage steps, and screenshots so the final result looked a bit more complete. I was not trying to add anything fancy here, just making sure the thing looked complete enough to show someone. I had to think about both the model side and the form side at the same time, which made the day a bit scattered.
 - Deliverable: Ended the day with complete README in hand, plus a few side notes on what still needed fixing later. There were still a couple of loose parts, but nothing serious enough to block the next step.
+## 2022-05-04 - Day 16: Polish wrap
+
+- Task summary: Used the last day on Salary Estimation Flask App to slow down and finish the loose ends. I mainly had to do a final bug pass and remove confusing UI or code leftovers and make sure the project told a clean story from start to finish. Most of the heavy lifting was already done, so this part was more about making the rough edges less obvious. Part of the effort went into making sure a normal person could use the page without needing extra explanation.
+- Deliverable: Finished with release candidate looking decent enough to call this version done, even if I could still nitpick a few things. It was not super polished, just stable enough that I felt okay moving forward.
