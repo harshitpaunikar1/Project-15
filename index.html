@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Interesting Part Starts After model.fit()</title>
+  <meta name="description" content="An engineer's walkthrough of turning a tiny salary model into a usable Flask interface, and why that still does not count as production readiness.">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=IBM+Plex+Serif:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #ffffff;
+      --paper: #f5f5f5;
+      --panel: #f0f0f0;
+      --ink: #111111;
+      --muted: #555555;
+      --soft: #888888;
+      --rule: #e8e8e8;
+      --edge: #333333;
+      --black: #111111;
+      --white: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "IBM Plex Sans", system-ui, sans-serif;
+      line-height: 1.65;
+    }
+
+    a {
+      color: inherit;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 0.18em;
+    }
+
+    .page {
+      max-width: 1460px;
+      margin: 0 auto;
+      padding: 28px 28px 72px;
+    }
+
+    .masthead {
+      border: 1px solid var(--black);
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
+      background:
+        repeating-linear-gradient(
+          180deg,
+          var(--white) 0,
+          var(--white) 34px,
+          var(--rule) 34px,
+          var(--rule) 35px
+        );
+    }
+
+    .lead {
+      padding: 34px 34px 28px;
+      border-right: 1px solid var(--black);
+    }
+
+    .utility {
+      padding: 22px 24px 24px;
+      background: var(--paper);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 14ch;
+      font-family: "IBM Plex Serif", Georgia, serif;
+      font-size: clamp(2.9rem, 5vw, 5.4rem);
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+    }
+
+    .deck {
+      max-width: 48rem;
+      margin: 18px 0 0;
+      font-size: 1.12rem;
+      color: var(--muted);
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 26px;
+    }
+
+    .summary-card {
+      border-top: 1px solid var(--black);
+      padding-top: 12px;
+    }
+
+    .summary-card span {
+      display: block;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .summary-card strong {
+      font-size: 1.55rem;
+      font-weight: 600;
+    }
+
+    .utility h2,
+    .utility p {
+      margin: 0;
+    }
+
+    .utility h2 {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .utility-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 9px;
+    }
+
+    .utility-list li {
+      padding-top: 9px;
+      border-top: 1px solid var(--rule);
+      font-size: 0.95rem;
+    }
+
+    .utility-note {
+      padding: 14px;
+      border: 1px solid var(--edge);
+      background: var(--white);
+      font-size: 0.94rem;
+    }
+
+    .walkthrough {
+      margin-top: 26px;
+      display: grid;
+      gap: 26px;
+    }
+
+    .section {
+      border-top: 1px solid var(--black);
+      padding-top: 18px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 270px;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .section.full {
+      grid-template-columns: 1fr;
+    }
+
+    .section-head {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 4px;
+    }
+
+    .commit {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 9px;
+      background: var(--black);
+      color: var(--white);
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .section h2 {
+      margin: 0;
+      font-size: clamp(1.5rem, 2.4vw, 2.25rem);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      font-weight: 700;
+    }
+
+    .section-body {
+      min-width: 0;
+    }
+
+    .section-body > p:first-of-type {
+      margin-top: 0;
+      font-size: 1.08rem;
+    }
+
+    .section-body p,
+    .section-body ul,
+    .section-body ol {
+      margin: 0 0 16px;
+    }
+
+    .section-body ul,
+    .section-body ol {
+      padding-left: 20px;
+    }
+
+    .margin {
+      border-left: 1px solid var(--black);
+      padding-left: 18px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .margin-card {
+      background: var(--paper);
+      border: 1px solid var(--rule);
+      padding: 14px;
+    }
+
+    .margin-card h3 {
+      margin: 0 0 8px;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .margin-card p,
+    .margin-card ul {
+      margin: 0;
+      font-size: 0.93rem;
+    }
+
+    .margin-card ul {
+      padding-left: 18px;
+    }
+
+    figure {
+      margin: 18px 0 12px;
+    }
+
+    .diagram-frame {
+      border: 1px solid var(--black);
+      background: var(--white);
+      padding: 18px;
+    }
+
+    svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      font-family: "IBM Plex Sans", system-ui, sans-serif;
+    }
+
+    figcaption {
+      margin-top: 10px;
+      font-style: italic;
+      color: var(--muted);
+    }
+
+    .codeblock {
+      margin: 18px 0;
+      background: var(--black);
+      color: var(--white);
+      padding: 18px 20px;
+      overflow-x: auto;
+      border: 1px solid var(--black);
+    }
+
+    pre,
+    code {
+      font-family: "IBM Plex Mono", monospace;
+    }
+
+    pre {
+      margin: 0;
+      font-size: 0.92rem;
+      line-height: 1.55;
+      white-space: pre;
+    }
+
+    .comparison {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0 18px;
+      font-size: 0.97rem;
+    }
+
+    .comparison th,
+    .comparison td {
+      padding: 11px 12px;
+      border: 1px solid var(--rule);
+      vertical-align: top;
+      text-align: left;
+    }
+
+    .comparison th {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: var(--paper);
+    }
+
+    .callout-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin: 10px 0 20px;
+    }
+
+    .callout {
+      border: 1px solid var(--black);
+      padding: 14px;
+      background: var(--white);
+    }
+
+    .callout strong {
+      display: block;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+
+    .divider-note {
+      padding: 16px 18px;
+      border: 1px solid var(--black);
+      background: var(--panel);
+      font-size: 1rem;
+    }
+
+    .closing {
+      border-top: 2px solid var(--black);
+      padding-top: 18px;
+      margin-top: 8px;
+      font-size: 1.08rem;
+    }
+
+    @media (max-width: 1080px) {
+      .masthead {
+        grid-template-columns: 1fr;
+      }
+
+      .lead {
+        border-right: none;
+        border-bottom: 1px solid var(--black);
+      }
+
+      .section {
+        grid-template-columns: 1fr;
+      }
+
+      .margin {
+        border-left: none;
+        border-top: 1px solid var(--rule);
+        padding-left: 0;
+        padding-top: 18px;
+      }
+
+      .summary-grid,
+      .callout-strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      .page {
+        padding: 16px 16px 42px;
+      }
+
+      h1 {
+        max-width: none;
+      }
+
+      .summary-grid,
+      .callout-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .diagram-frame {
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="masthead">
+      <div class="lead">
+        <p class="eyebrow">Notebook-to-Tool Walkthrough / Flask Salary Estimation Deployment</p>
+        <h1>The Interesting Part Starts After <code>model.fit()</code></h1>
+        <p class="deck">A notebook can give you coefficients. A usable tool has to define inputs, serialize the artifact, expose a route, render a response, and survive an environment that did not train the model. That is the real story in this folder.</p>
+        <div class="summary-grid">
+          <div class="summary-card">
+            <span>Rows in Training CSV</span>
+            <strong>8</strong>
+          </div>
+          <div class="summary-card">
+            <span>Input Fields</span>
+            <strong>3</strong>
+          </div>
+          <div class="summary-card">
+            <span>POST Endpoints</span>
+            <strong>2</strong>
+          </div>
+          <div class="summary-card">
+            <span>Serialized Artifact</span>
+            <strong>1 pickle</strong>
+          </div>
+        </div>
+      </div>
+      <aside class="utility">
+        <div>
+          <h2>What The Repo Actually Ships</h2>
+          <ul class="utility-list">
+            <li><code>model.py</code> trains a linear regression and writes <code>model.pkl</code>.</li>
+            <li><code>app.py</code> exposes <code>/</code>, <code>/predict</code>, and <code>/predict_api</code>.</li>
+            <li><code>request.py</code> demonstrates the JSON path with one hard-coded request.</li>
+            <li>The browser form collects experience, test score, and interview score, then renders a single salary string.</li>
+          </ul>
+        </div>
+        <div class="utility-note">
+          I do not think this folder is interesting because the model is sophisticated. It is interesting because it forces notebook logic to make contact with real inputs, real route handling, and real deployment fragility.
+        </div>
+      </aside>
+    </header>
+
+    <main class="walkthrough">
+      <section class="section">
+        <div class="section-head">
+          <span class="commit">commit 01</span>
+          <h2>Define the software surface before talking about deployment</h2>
+        </div>
+        <div class="section-body">
+          <p>The most valuable move in this project is not mathematical. It is architectural. The repository stops being a training exercise the moment it draws a line between model creation and model use. That line is simple here, but it is real: <code>model.py</code> creates an artifact, <code>app.py</code> loads it, and the template in <code>templates/index.html</code> becomes the human-facing entry point.</p>
+          <p>That may sound obvious, but I have seen plenty of ML portfolios dodge exactly this step. They show a notebook, maybe a chart, maybe an accuracy metric, and then quietly hope the reader will imagine a product around it. This folder does not make that mistake. A candidate enters three values, hits submit, and receives a number. There is also a separate API endpoint for machine-to-machine access. Neither surface is elaborate, but both are concrete.</p>
+          <p>The right way to read the app is as a sequence of obligations. The browser must collect input in a stable shape. Flask must coerce that input into a numeric array. The model artifact must already exist and load successfully. The return value must be formatted into something a user can understand. Every one of those obligations is a place where notebook confidence gets cut down to size.</p>
+
+          <figure>
+            <div class="diagram-frame">
+              <svg viewBox="0 0 760 960" role="img" aria-labelledby="ladder-title ladder-desc">
+                <title id="ladder-title">Request ladder for the Flask salary estimator</title>
+                <desc id="ladder-desc">A stacked route diagram showing how browser or client input moves through the Flask application and into the pickled regression model before returning a rendered salary response.</desc>
+                <defs>
+                  <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+                    <path d="M0,0 L10,5 L0,10 z" fill="#111111"></path>
+                  </marker>
+                </defs>
+
+                <rect x="24" y="24" width="712" height="912" fill="#ffffff" stroke="#111111" stroke-width="1.5"></rect>
+
+                <rect x="78" y="78" width="420" height="96" fill="#f5f5f5" stroke="#111111" stroke-width="1.5"></rect>
+                <text x="102" y="113" font-size="16" font-weight="600" fill="#111111">1. Browser form</text>
+                <text x="102" y="141" font-size="15" fill="#111111">Fields: experience, test_score, interview_score</text>
+                <text x="102" y="164" font-size="13" fill="#555555">Source: templates/index.html</text>
+                <rect x="530" y="86" width="156" height="80" fill="#ffffff" stroke="#333333" stroke-width="1.2"></rect>
+                <text x="548" y="116" font-size="13" font-weight="600" fill="#111111">User obligation</text>
+                <text x="548" y="138" font-size="12" fill="#111111">Provide three values in</text>
+                <text x="548" y="155" font-size="12" fill="#111111">the expected order.</text>
+
+                <line x1="288" y1="174" x2="288" y2="226" stroke="#111111" stroke-width="1.5" marker-end="url(#arrow)"></line>
+                <text x="311" y="208" font-size="12" fill="#555555">POST /predict</text>
+
+                <rect x="78" y="226" width="420" height="104" fill="#ffffff" stroke="#111111" stroke-width="1.5"></rect>
+                <text x="102" y="262" font-size="16" font-weight="600" fill="#111111">2. Flask route parses form data</text>
+                <text x="102" y="290" font-size="15" fill="#111111"><tspan font-family="IBM Plex Mono, monospace">[int(x) for x in request.form.values()]</tspan></text>
+                <text x="102" y="313" font-size="13" fill="#555555">Strings become integers before prediction.</text>
+                <rect x="530" y="238" width="156" height="80" fill="#f5f5f5" stroke="#333333" stroke-width="1.2"></rect>
+                <text x="548" y="267" font-size="13" font-weight="600" fill="#111111">Risk</text>
+                <text x="548" y="289" font-size="12" fill="#111111">No validation for blanks,</text>
+                <text x="548" y="306" font-size="12" fill="#111111">floats, or stray text.</text>
+
+                <line x1="288" y1="330" x2="288" y2="382" stroke="#111111" stroke-width="1.5" marker-end="url(#arrow)"></line>
+                <text x="305" y="363" font-size="12" fill="#555555">array packaging</text>
+
+                <rect x="78" y="382" width="420" height="110" fill="#111111" stroke="#111111" stroke-width="1.5"></rect>
+                <text x="102" y="418" font-size="16" font-weight="600" fill="#f5f5f5">3. Loaded model artifact</text>
+                <text x="102" y="446" font-size="15" fill="#f5f5f5"><tspan font-family="IBM Plex Mono, monospace">model = pickle.load(open('model.pkl', 'rb'))</tspan></text>
+                <text x="102" y="470" font-size="13" fill="#dddddd">The artifact is imported once at app startup.</text>
+                <rect x="530" y="398" width="156" height="78" fill="#ffffff" stroke="#333333" stroke-width="1.2"></rect>
+                <text x="548" y="426" font-size="13" font-weight="600" fill="#111111">Environment note</text>
+                <text x="548" y="448" font-size="12" fill="#111111">Pickle ties runtime</text>
+                <text x="548" y="465" font-size="12" fill="#111111">to training dependencies.</text>
+
+                <line x1="288" y1="492" x2="288" y2="544" stroke="#111111" stroke-width="1.5" marker-end="url(#arrow)"></line>
+                <text x="312" y="525" font-size="12" fill="#555555">predict()</text>
+
+                <rect x="78" y="544" width="420" height="96" fill="#f5f5f5" stroke="#111111" stroke-width="1.5"></rect>
+                <text x="102" y="579" font-size="16" font-weight="600" fill="#111111">4. Regression output</text>
+                <text x="102" y="607" font-size="15" fill="#111111">Example from the training script: <tspan font-family="IBM Plex Mono, monospace">[2, 9, 6] → 53290.89</tspan></text>
+                <text x="102" y="630" font-size="13" fill="#555555">The project rounds to two decimals for display.</text>
+                <rect x="530" y="552" width="156" height="80" fill="#ffffff" stroke="#333333" stroke-width="1.2"></rect>
+                <text x="548" y="582" font-size="13" font-weight="600" fill="#111111">Interpretation limit</text>
+                <text x="548" y="604" font-size="12" fill="#111111">A single point estimate is</text>
+                <text x="548" y="621" font-size="12" fill="#111111">not a hiring policy.</text>
+
+                <line x1="288" y1="640" x2="288" y2="692" stroke="#111111" stroke-width="1.5" marker-end="url(#arrow)"></line>
+                <text x="312" y="674" font-size="12" fill="#555555">render or jsonify</text>
+
+                <rect x="78" y="692" width="420" height="108" fill="#ffffff" stroke="#111111" stroke-width="1.5"></rect>
+                <text x="102" y="728" font-size="16" font-weight="600" fill="#111111">5. Response surface</text>
+                <text x="102" y="756" font-size="15" fill="#111111">Browser: <tspan font-family="IBM Plex Mono, monospace">Estimated salary is ₹ {output}</tspan></text>
+                <text x="102" y="779" font-size="15" fill="#111111">API: raw JSON numeric response</text>
+                <rect x="530" y="706" width="156" height="80" fill="#f5f5f5" stroke="#333333" stroke-width="1.2"></rect>
+                <text x="548" y="736" font-size="13" font-weight="600" fill="#111111">Why this matters</text>
+                <text x="548" y="758" font-size="12" fill="#111111">The model is now callable</text>
+                <text x="548" y="775" font-size="12" fill="#111111">by a person or a script.</text>
+
+                <text x="78" y="866" font-size="13" fill="#555555">Files involved: templates/index.html → app.py → model.pkl → app.py / request.py</text>
+              </svg>
+            </div>
+            <figcaption>The application is thin, but not imaginary. The important shift is that prediction now passes through specific files, specific inputs, and specific failure points.</figcaption>
+          </figure>
+        </div>
+        <aside class="margin">
+          <div class="margin-card">
+            <h3>Folder Evidence</h3>
+            <ul>
+              <li><code>hiring.csv</code> has 8 rows and 4 columns.</li>
+              <li>The template collects three text inputs.</li>
+              <li>The app exposes one human path and one API path.</li>
+            </ul>
+          </div>
+          <div class="margin-card">
+            <h3>Why I Care</h3>
+            <p>Interface shape is where toy models reveal their assumptions. If you cannot state the accepted inputs precisely, you do not yet have a deployable object.</p>
+          </div>
+        </aside>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <span class="commit">commit 02</span>
+          <h2>Train something serializable, and admit how small it is</h2>
+        </div>
+        <div class="section-body">
+          <p>The model itself is a plain linear regression trained on three features: experience, test score, and interview score. The dataset is tiny. That matters more than the algorithm choice. With only eight records, the author sensibly avoids a train-test split and fits on the full table, but that means any quality number you quote is describing fit on known data, not proven behavior on new candidates.</p>
+          <p>The preprocessing is straightforward. Missing experience is filled with zero. Missing test score is filled with the column mean, which works out to roughly <code>7.86</code>. Experience tokens such as <code>five</code>, <code>two</code>, <code>ten</code>, and <code>eleven</code> are mapped into integers through a hand-written dictionary. After that, the model is fit and pickled.</p>
+          <p>I like this because it is honest about the dataset it has. I do not like it when people pretend a fragile dataset becomes mature just because it got wrapped in scikit-learn. On the recomputed training set, the linear regression reaches an <code>R²</code> of about <code>0.964</code>. That sounds high until you remember the sample size. Eight rows are enough to build a demo. They are not enough to justify salary-setting confidence.</p>
+
+          <div class="callout-strip">
+            <div class="callout">
+              <strong>Observed Mean</strong>
+              <p>Experience averages <code>4.75</code> years after conversion and imputation.</p>
+            </div>
+            <div class="callout">
+              <strong>Observed Mean</strong>
+              <p>Test score averages <code>7.86</code> after the missing value is filled.</p>
+            </div>
+            <div class="callout">
+              <strong>Observed Mean</strong>
+              <p>Salary averages <code>63000</code> across the eight training rows.</p>
+            </div>
+          </div>
+
+          <div class="codeblock">
+            <pre>dataset = pd.read_csv("hiring.csv")
+
+dataset["experience"] = dataset["experience"].fillna(0)
+dataset["test_score"] = dataset["test_score"].fillna(
+    dataset["test_score"].mean()  # replace the lone missing score
+)
+
+word_dict = {
+    "one": 1, "two": 2, "three": 3, "four": 4,
+    "five": 5, "six": 6, "seven": 7, "eight": 8,
+    "nine": 9, "ten": 10, "eleven": 11, "twelve": 12,
+    "zero": 0, 0: 0
+}
+
+dataset["experience"] = dataset["experience"].apply(
+    lambda x: word_dict[x]  # convert written years into integers
+)
+
+X = dataset[["experience", "test_score", "interview_score"]]
+y = dataset["salary"]
+
+regressor = LinearRegression()
+regressor.fit(X, y)
+pickle.dump(regressor, open("model.pkl", "wb"))</pre>
+          </div>
+
+          <p>The recomputed coefficients also tell a familiar tutorial story. Experience contributes the largest per-unit lift at roughly <code>2827.63</code>. Interview score adds about <code>2196.98</code> per point. Test score adds about <code>1912.94</code>. That ordering feels plausible, but again, plausibility is not the same thing as robustness. With data this small, one extra row can easily move the line.</p>
+        </div>
+        <aside class="margin">
+          <div class="margin-card">
+            <h3>Practical Read</h3>
+            <p>The model is not the product. It is a compact artifact that makes the route worth testing.</p>
+          </div>
+          <div class="margin-card">
+            <h3>Common Mistake</h3>
+            <p>Quoting a training-set <code>R²</code> as if it were deployment evidence. It is not. It only tells you the line hugs the eight rows it already saw.</p>
+          </div>
+        </aside>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <span class="commit">commit 03</span>
+          <h2>Wire the browser route, then notice the input contract it creates</h2>
+        </div>
+        <div class="section-body">
+          <p>The HTML form in the Flask template is simple enough to read in a glance. Three text boxes. One submit button labeled <code>SALARY</code>. A placeholder line for <code>{{ prediction_text }}</code>. That economy is good for a demo because there is nowhere for the flow to hide. You can see exactly what the application asks of the user.</p>
+          <p>The sharper detail lives in <code>app.py</code>. The browser route does not read field names individually. It grabs <code>request.form.values()</code>, casts every value to <code>int</code>, wraps the result in a NumPy array, and sends it directly to the model. That is concise. It also creates a strict and mostly undocumented contract: the form must keep the feature order stable, every incoming value must be integer-like, and the user must already understand that experience should be entered numerically even though the training file originally stored many experience values as words.</p>
+          <p>That last point is the kind of thing practitioners notice and generic writeups skip. In the training script, experience is cleaned from tokens like <code>five</code> and <code>ten</code>. In the web app, <code>int(x)</code> means the browser flow now expects <code>5</code> and <code>10</code>. That is a perfectly defensible simplification. It is also a change in interface semantics, and deployment work is exactly where those semantic shifts have to become explicit.</p>
+
+          <div class="codeblock">
+            <pre>@app.route("/predict", methods=["POST"])
+def predict():
+    int_features = [int(x) for x in request.form.values()]
+    final_features = [np.array(int_features)]
+    prediction = model.predict(final_features)
+
+    output = round(prediction[0], 2)
+    return render_template(
+        "index.html",
+        prediction_text=f"Estimated salary is ₹ {output}"
+    )</pre>
+          </div>
+
+          <p>I would keep the route this small in a teaching project. I would not keep it this trusting in a real deployment. There is no range checking, no message for malformed input, no distinction between missing values and impossible values, and no explanation of the currency context behind the rupee symbol. None of that invalidates the demo. It just tells you what stage of maturity the demo is in.</p>
+
+          <figure>
+            <div class="diagram-frame">
+              <svg viewBox="0 0 920 430" role="img" aria-labelledby="story-title story-desc">
+                <title id="story-title">Browser and API storyboard for the salary estimator</title>
+                <desc id="story-desc">A side-by-side diagram comparing the human form submission path with the JSON API path, showing how both end at the same regression model but return different response formats.</desc>
+                <defs>
+                  <marker id="arrow-two" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+                    <path d="M0,0 L10,5 L0,10 z" fill="#111111"></path>
+                  </marker>
+                </defs>
+
+                <rect x="20" y="20" width="880" height="390" fill="#ffffff" stroke="#111111" stroke-width="1.5"></rect>
+
+                <text x="74" y="58" font-size="18" font-weight="700" fill="#111111">Human path</text>
+                <rect x="48" y="82" width="222" height="88" fill="#f5f5f5" stroke="#111111" stroke-width="1.4"></rect>
+                <text x="68" y="114" font-size="15" font-weight="600" fill="#111111">Browser form</text>
+                <text x="68" y="138" font-size="13" fill="#111111">Three text inputs</text>
+                <text x="68" y="158" font-size="13" fill="#111111">One submit button</text>
+
+                <line x1="270" y1="126" x2="350" y2="126" stroke="#111111" stroke-width="1.5" marker-end="url(#arrow-two)"></line>
+
+                <rect x="350" y="82" width="240" height="88" fill="#ffffff" stroke="#111111" stroke-width="1.4"></rect>
+                <text x="370" y="114" font-size="15" font-weight="600" fill="#111111">Flask <tspan font-family="IBM Plex Mono, monospace">/predict</tspan></text>
+                <text x="370" y="138" font-size="13" fill="#111111">Cast strings to integers</text>
+                <text x="370" y="158" font-size="13" fill="#111111">Call regression model</text>
+
+                <line x1="590" y1="126" x2="670" y2="126" stroke="#111111" stroke-width="1.5" marker-end="url(#arrow-two)"></line>
+
+                <rect x="670" y="82" width="184" height="88" fill="#111111" stroke="#111111" stroke-width="1.4"></rect>
+                <text x="691" y="114" font-size="15" font-weight="600" fill="#f5f5f5">Rendered reply</text>
+                <text x="691" y="138" font-size="13" fill="#f5f5f5">Salary text returned</text>
+                <text x="691" y="158" font-size="13" fill="#dddddd">Inside same template</text>
+
+                <text x="74" y="248" font-size="18" font-weight="700" fill="#111111">Scripted path</text>
+                <rect x="48" y="272" width="222" height="88" fill="#f5f5f5" stroke="#111111" stroke-width="1.4"></rect>
+                <text x="68" y="304" font-size="15" font-weight="600" fill="#111111"><tspan font-family="IBM Plex Mono, monospace">request.py</tspan></text>
+                <text x="68" y="328" font-size="13" fill="#111111">JSON body with three keys</text>
+                <text x="68" y="348" font-size="13" fill="#111111">No auth, no retries, no schema</text>
+
+                <line x1="270" y1="316" x2="350" y2="316" stroke="#111111" stroke-width="1.5" marker-end="url(#arrow-two)"></line>
+
+                <rect x="350" y="272" width="240" height="88" fill="#ffffff" stroke="#111111" stroke-width="1.4"></rect>
+                <text x="370" y="304" font-size="15" font-weight="600" fill="#111111">Flask <tspan font-family="IBM Plex Mono, monospace">/predict_api</tspan></text>
+                <text x="370" y="328" font-size="13" fill="#111111">Read JSON in insertion order</text>
+                <text x="370" y="348" font-size="13" fill="#111111">Return numeric JSON</text>
+
+                <line x1="590" y1="316" x2="670" y2="316" stroke="#111111" stroke-width="1.5" marker-end="url(#arrow-two)"></line>
+
+                <rect x="670" y="272" width="184" height="88" fill="#ffffff" stroke="#111111" stroke-width="1.4"></rect>
+                <text x="691" y="304" font-size="15" font-weight="600" fill="#111111">Raw response</text>
+                <text x="691" y="328" font-size="13" fill="#111111">Single number in JSON</text>
+                <text x="691" y="348" font-size="12" fill="#111111">Easy to demo, thin by design</text>
+              </svg>
+            </div>
+            <figcaption>The browser and API paths are siblings, not separate systems. Both call the same model, but each creates a different contract with its caller.</figcaption>
+          </figure>
+        </div>
+        <aside class="margin">
+          <div class="margin-card">
+            <h3>Input Mismatch</h3>
+            <p>Training tolerates written experience values. The browser route does not. That is not a bug by itself, but it is a design decision worth naming.</p>
+          </div>
+          <div class="margin-card">
+            <h3>Observed Output</h3>
+            <p>Using the trained regression with inputs <code>[2, 9, 6]</code> produces approximately <code>53290.89</code>.</p>
+          </div>
+        </aside>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <span class="commit">commit 04</span>
+          <h2>Add an API, but do not pretend that one endpoint makes a platform</h2>
+        </div>
+        <div class="section-body">
+          <p>The API route is useful because it proves the app can be consumed without the browser. <code>request.py</code> posts a JSON body to <code>http://localhost:5000/predict_api</code>, and the Flask handler returns a numeric JSON response. That is enough for local testing and enough to demonstrate that the model can sit behind another service later.</p>
+          <p>It is also a good example of where demo ergonomics and production reliability diverge. The route turns the JSON payload into a list by calling <code>list(data.values())</code>. That assumes the sender preserves key order in the same order the model expects features. The included request script does exactly that, so the demo works. A stricter implementation would name the fields explicitly, validate them, and reject malformed payloads with a readable error. I would push for that immediately if this were headed toward shared internal use.</p>
+          <p>This is why I resist glamorous deployment language. A Flask wrapper is not the finish line. It is the first moment when the model is forced to declare its contract. The route here is perfectly adequate for a portfolio demonstration. It is not yet a dependable service interface, and calling it one would lower the editorial standard of the page.</p>
+
+          <div class="codeblock">
+            <pre>@app.route("/predict_api", methods=["POST"])
+def predict_api():
+    data = request.get_json(force=True)
+    prediction = model.predict([np.array(list(data.values()))])
+
+    output = prediction[0]
+    return jsonify(output)
+
+# request.py sends:
+# {"experience": 2, "test_score": 9, "interview_score": 6}</pre>
+          </div>
+
+          <p>There is still value here. A lot of beginner deployments never separate human interaction from machine interaction at all. This one does. The reader can see the two surfaces, compare them, and understand that the same model can answer both. That is a solid notebook-to-tool lesson.</p>
+        </div>
+        <aside class="margin">
+          <div class="margin-card">
+            <h3>Good Enough For</h3>
+            <p>Local demoing, route comprehension, and proving that the artifact can answer both HTML and JSON callers.</p>
+          </div>
+          <div class="margin-card">
+            <h3>Not Good Enough For</h3>
+            <p>Stable internal APIs, audited compensation workflows, or any workflow that needs explicit validation, logging, or permissions.</p>
+          </div>
+        </aside>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <span class="commit">commit 05</span>
+          <h2>Deployment becomes real when environment friction shows up</h2>
+        </div>
+        <div class="section-body">
+          <p>The folder’s most honest line may be Flask’s own warning: the built-in server is a development server and should not be used for production deployment. That warning matters because the project has reached the point where environment details suddenly matter. The app loads <code>model.pkl</code> at import time. It relies on local file paths. The repository does not include a dependency manifest. The README tells the user to open an Anaconda prompt and run <code>python app.py</code>, which is practical advice for a tutorial and incomplete advice for an operational handoff.</p>
+          <p>Pickle is the other deployment hinge. It is fast to use, common in tutorials, and tightly coupled to the environment that created the artifact. I have no problem with pickle in a small local demo. I do have a problem when people mistake it for a portability guarantee. If the package versions drift, loading the artifact can become the failure point before a single request is served. The route code is not where deployments usually break first; the artifact boundary often is.</p>
+          <p>The folder also runs the app with <code>debug=True</code>. That is fine for iteration. It is not a detail to quietly carry into a serious hosting story. Debug mode, missing schema validation, no tests, no evaluation report, no requirements file, and a dataset of eight rows all push the same conclusion: this is a useful interface prototype, not a salary decision system.</p>
+
+          <table class="comparison">
+            <thead>
+              <tr>
+                <th>What Exists</th>
+                <th>Why It Matters</th>
+                <th>What Is Still Missing</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Browser form and Flask template</td>
+                <td>A human can actually submit values and receive a result.</td>
+                <td>Validation, explanatory error states, and units guidance.</td>
+              </tr>
+              <tr>
+                <td><code>/predict_api</code> JSON route</td>
+                <td>The model can be called by a script, not just a page.</td>
+                <td>Explicit field mapping, schema checks, and response envelope design.</td>
+              </tr>
+              <tr>
+                <td>Serialized <code>model.pkl</code></td>
+                <td>The inference app is separated from training code.</td>
+                <td>Version pinning, artifact metadata, and safer deployment packaging.</td>
+              </tr>
+              <tr>
+                <td>Small training script</td>
+                <td>The preprocessing logic is readable and easy to reproduce.</td>
+                <td>Holdout evaluation, tests, and any fairness or compensation review.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="divider-note">The right conclusion is not “this is too small to matter.” The right conclusion is “this is exactly big enough to expose the engineering work a notebook usually hides.”</div>
+        </div>
+        <aside class="margin">
+          <div class="margin-card">
+            <h3>Operational Reading</h3>
+            <p>Once a model artifact is loaded at app startup, dependency drift becomes an application problem, not just a notebook problem.</p>
+          </div>
+          <div class="margin-card">
+            <h3>Editorial Rule</h3>
+            <p>Never let a deployment page imply production readiness just because a localhost route responds.</p>
+          </div>
+        </aside>
+      </section>
+
+      <section class="section full">
+        <div class="section-head">
+          <span class="commit">commit 06</span>
+          <h2>Use the demo for what it is good at, then tighten the weak seams</h2>
+        </div>
+        <div class="section-body">
+          <p>This project earns its place as a deployment walkthrough because it gets one thing right that many beginner ML repos never reach: it turns a trained estimator into a callable surface. That is not glamorous work. It is the necessary work. The folder defines a form, a request path, an artifact boundary, and a returned result. Those are the pieces another human can inspect, use, and improve.</p>
+          <p>If I were carrying this forward, I would keep the overall simplicity and harden the seams. I would replace the positional input assumptions with named extraction. I would validate types and ranges before prediction. I would save artifact metadata next to the model so environment mismatches are easier to diagnose. I would add a small evaluation note explaining that the model was trained on eight rows and is intended as a tutorial artifact, not a compensation authority. And I would separate “deployment proof” from “prediction quality” in the project narrative, because they are not interchangeable claims.</p>
+          <p class="closing">The practical lesson is sharp: wrapping a model in Flask is not impressive because Flask is magical. It is useful because the wrapper forces the model to stop being abstract. Once inputs, routes, files, and runtime assumptions are visible, you can finally judge what has really been built.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
