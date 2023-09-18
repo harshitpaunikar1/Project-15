@@ -12,3 +12,7 @@
 
 - Task summary: Added a model metadata endpoint that returns the training date, feature names expected, and model type. Useful for debugging deployment issues without digging into code.
 - Deliverable: Model metadata endpoint added at /model/info.
+## 2023-09-18 - Day 4: Model integration
+
+- Task summary: The numerical encoding for job title categories was done at training time but the Flask app was not applying the same encoding map at inference time — they diverged. Fixed by saving the encoder alongside the model and loading both.
+- Deliverable: Category encoder now saved and loaded alongside model. Encoding consistency ensured.
