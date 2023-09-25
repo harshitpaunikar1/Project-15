@@ -16,3 +16,7 @@
 
 - Task summary: The numerical encoding for job title categories was done at training time but the Flask app was not applying the same encoding map at inference time — they diverged. Fixed by saving the encoder alongside the model and loading both.
 - Deliverable: Category encoder now saved and loaded alongside model. Encoding consistency ensured.
+## 2023-09-25 - Day 5: Frontend form
+
+- Task summary: Built the simple HTML form for the salary estimation app today. Kept it deliberately minimal — a single-page form with labelled fields, a submit button, and a result div that gets populated via a fetch call to the prediction endpoint. No external dependencies, just plain HTML and a small inline script. Tested the full round trip from form submission to prediction result display.
+- Deliverable: HTML form built. Full round-trip tested and working.
