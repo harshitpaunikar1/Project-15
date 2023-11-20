@@ -24,3 +24,7 @@
 
 - Task summary: Added a proper test suite for the Salary Estimation Flask app today. Wrote tests for the happy path prediction, missing required field, out-of-range input, and the model metadata endpoint. Used pytest with the Flask test client. Coverage report showed all critical paths were covered. Also added a CI configuration file so the tests run on push.
 - Deliverable: Pytest suite written. All critical paths covered. CI config added.
+## 2023-11-20 - Day 6: Testing
+
+- Task summary: One of the tests was failing intermittently due to a floating point comparison with no tolerance. Fixed to use pytest.approx.
+- Deliverable: Floating point test fixed with pytest.approx.
