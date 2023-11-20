@@ -20,3 +20,7 @@
 
 - Task summary: Built the simple HTML form for the salary estimation app today. Kept it deliberately minimal — a single-page form with labelled fields, a submit button, and a result div that gets populated via a fetch call to the prediction endpoint. No external dependencies, just plain HTML and a small inline script. Tested the full round trip from form submission to prediction result display.
 - Deliverable: HTML form built. Full round-trip tested and working.
+## 2023-11-20 - Day 6: Testing
+
+- Task summary: Added a proper test suite for the Salary Estimation Flask app today. Wrote tests for the happy path prediction, missing required field, out-of-range input, and the model metadata endpoint. Used pytest with the Flask test client. Coverage report showed all critical paths were covered. Also added a CI configuration file so the tests run on push.
+- Deliverable: Pytest suite written. All critical paths covered. CI config added.
