@@ -28,3 +28,7 @@
 
 - Task summary: One of the tests was failing intermittently due to a floating point comparison with no tolerance. Fixed to use pytest.approx.
 - Deliverable: Floating point test fixed with pytest.approx.
+## 2023-12-26 - Day 7: Portfolio finalization
+
+- Task summary: Final cleanup on the Salary Estimation Flask App. Reviewed every file in the repo — removed some leftover scratch scripts, cleaned up the directory structure, and added a clear separation between the model training code and the serving code. The two had been interleaved which made it confusing to know where to look for what.
+- Deliverable: Directory structure cleaned. Training and serving code properly separated.
