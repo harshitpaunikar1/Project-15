@@ -32,3 +32,7 @@
 
 - Task summary: Final cleanup on the Salary Estimation Flask App. Reviewed every file in the repo — removed some leftover scratch scripts, cleaned up the directory structure, and added a clear separation between the model training code and the serving code. The two had been interleaved which made it confusing to know where to look for what.
 - Deliverable: Directory structure cleaned. Training and serving code properly separated.
+## 2023-12-26 - Day 7: Portfolio finalization
+
+- Task summary: Added a brief architecture diagram to the README showing how the model, preprocessing, and Flask routes connect.
+- Deliverable: Architecture diagram added to README.
