@@ -1,4 +1,4 @@
-# Project-15
+# Salary Estimation Flask App
 
 Deployment (using flask) model for estimating salary based on test score &amp; interview. 
 `DEMO: https://youtu.be/HhI5Zg4YnkU
