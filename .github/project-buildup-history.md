@@ -6,7 +6,7 @@
 - Source: `project_buildup_2021_2025_daily_plan_extra.csv`
 ## 2023-09-18 - Day 4: Model integration
 
-- Task summary: Spent today integrating the trained salary estimation model into the Flask app properly. The serialization had been done with a different version of scikit-learn than what was in the requirements file, which was causing a loading error in the environment. Retrained the model in the correct environment and re-serialized. Also verified that the prediction output matched what the notebook produced for the same inputs — it did after the retraining.
+- Task summary: Spent today integrating the trained salary estimation model into the Flask app properly. The serialization had been done with a different version of scikit-learn than what was in the requirements file, which was causing a loading error in the environment. Retrained the model in the correct environment and re-serialized. Also verified that the prediction output matched what the notebook produced for the same inputs - it did after the retraining.
 - Deliverable: Model retrained in consistent environment. Serialization/loading issue resolved.
 ## 2023-09-18 - Day 4: Model integration
 
@@ -14,11 +14,11 @@
 - Deliverable: Model metadata endpoint added at /model/info.
 ## 2023-09-18 - Day 4: Model integration
 
-- Task summary: The numerical encoding for job title categories was done at training time but the Flask app was not applying the same encoding map at inference time — they diverged. Fixed by saving the encoder alongside the model and loading both.
+- Task summary: The numerical encoding for job title categories was done at training time but the Flask app was not applying the same encoding map at inference time - they diverged. Fixed by saving the encoder alongside the model and loading both.
 - Deliverable: Category encoder now saved and loaded alongside model. Encoding consistency ensured.
 ## 2023-09-25 - Day 5: Frontend form
 
-- Task summary: Built the simple HTML form for the salary estimation app today. Kept it deliberately minimal — a single-page form with labelled fields, a submit button, and a result div that gets populated via a fetch call to the prediction endpoint. No external dependencies, just plain HTML and a small inline script. Tested the full round trip from form submission to prediction result display.
+- Task summary: Built the simple HTML form for the salary estimation app today. Kept it deliberately minimal - a single-page form with labelled fields, a submit button, and a result div that gets populated via a fetch call to the prediction endpoint. No external dependencies, just plain HTML and a small inline script. Tested the full round trip from form submission to prediction result display.
 - Deliverable: HTML form built. Full round-trip tested and working.
 ## 2023-11-20 - Day 6: Testing
 
@@ -30,7 +30,7 @@
 - Deliverable: Floating point test fixed with pytest.approx.
 ## 2023-12-26 - Day 7: Portfolio finalization
 
-- Task summary: Final cleanup on the Salary Estimation Flask App. Reviewed every file in the repo — removed some leftover scratch scripts, cleaned up the directory structure, and added a clear separation between the model training code and the serving code. The two had been interleaved which made it confusing to know where to look for what.
+- Task summary: Final cleanup on the Salary Estimation Flask App. Reviewed every file in the repo - removed some leftover scratch scripts, cleaned up the directory structure, and added a clear separation between the model training code and the serving code. The two had been interleaved which made it confusing to know where to look for what.
 - Deliverable: Directory structure cleaned. Training and serving code properly separated.
 ## 2023-12-26 - Day 7: Portfolio finalization
 
